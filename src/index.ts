@@ -56,6 +56,7 @@ const closeOtherTabs = async () => {
 };
 
 const commandListener = async (command: string) => {
+  console.log("command", command)
   switch (command) {
     case "move-left":
       await moveTab(-1)

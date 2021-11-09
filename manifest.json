@@ -7,7 +7,7 @@
     "48": "icons/icon48.png"
   },
   "background": {
-    "scripts": ["dist/index.js"]
+    "scripts": ["dist/shared.js", "dist/index.js"]
   },
   "permissions": ["contextMenus"],
   "browser_action": {

@@ -19,8 +19,3 @@ window.onload = async () => {
 
   list ? list.innerHTML = inner : null;
 }
-
-document.getElementById('manage-keys')?.addEventListener('click', function () {
-  webex.tabs.create({ active: true, url: "chrome://extensions/configureCommands" })
-});
-
