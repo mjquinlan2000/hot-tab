@@ -1,0 +1,105 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Hot Tab Popup</title>
+    <style>
+      body, html {
+        font-family: 'Arial' arial sans-serif;
+        padding: 0;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+
+      .btn {
+        background-color: #C75C5C;
+        color: #fff;
+        border-style: none;
+        padding: 5px 7px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 1.2em
+      }
+
+      a {
+        cursor: pointer;
+      }
+
+      .header {
+        font-size: 1.2em;
+        line-height: 1.2em;
+        text-align: center;
+        padding: 5px;
+        background-color: #f5cf87;
+        color: #5e5e5e;
+      }
+
+      .header img {
+        height: 1.2em;
+      }
+
+      .footer {
+        border-radius: 0 0 2px 2px;
+        overflow: hidden;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      .content {
+        background-color: #fff;
+        padding: 5px;
+      }
+
+      .shortcut-table, .shortcut-table td, .shortcut-table th {
+        border: 1px solid #ccc;
+      }
+
+      .spacer {
+        height: 10px;
+        width: 100%;
+      }
+
+      table {
+        border-collapse: collapse;
+        white-space: nowrap;
+        font-size: 1em;
+      }
+
+      td {
+        padding: 5px 7px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="fire_icon.png"/>
+      Hot Tab 2.0
+    </div>
+    <div class="content">
+      <div>Current shortcuts:</div>
+      <div class="spacer"></div>
+      <table class="shortcut-table">
+        <thead>
+          <tr>
+            <th>
+              Action
+            </th>
+            <th>
+              Keys
+            </th>
+          </tr>
+        </thead>
+        <tbody id="shortcut-list">
+        </tbody>
+      </table>
+    </div>
+    <div class="footer" id="manage-keys">
+      <a class="btn">Manage Shortcuts</a>
+    </div>
+    <script src="dist/popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "manifest_version": 2,
+  "name": "Hot Tab",
+  "version": "2.0",
+  "description": "Move tabs easier",
+  "icons": {
+    "48": "icons/icon48.png"
+  },
+  "background": {
+    "scripts": ["dist/index.js"]
+  },
+  "permissions": ["contextMenus"],
+  "browser_action": {
+    "default_title": "Hot Tab",
+    "default_popup": "popup.html",
+    "default_icon": "icons/icon128.png"
+  },
+  "commands": {
+    "move-left": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Left"
+      },
+      "description": "Move Tab Left"
+    },
+    "move-right": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Right"
+      },
+      "description": "Move tab right"
+    },
+    "pin-tab": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Down"
+      },
+      "description": "Toggle pin current tab"
+    },
+    "close-other-tabs": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K"
+      },
+      "description": "Close other tabs"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "hot-tab",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Michael Quinlan <mquinlan@gigsmart.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/webextension-polyfill": "^0.8.1",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.8.0"
+  }
+}
