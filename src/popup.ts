@@ -5,17 +5,26 @@ var list = document.getElementById('shortcut-list');
 window.onload = async () => {
   list ? list.innerHTML = "" : null;
   const commands = await webex.commands.getAll()
-  var inner = commands.filter(command => {
+  commands.filter(command => {
     return command.description != "";
   }).map(function (command) {
-    var shortcut;
+    let shortcut;
     if (command.shortcut == "") {
-      shortcut = "<i>None</i>";
+      let tag = document.createElement("i")
+      let text = document.createTextNode("None")
+      tag.appendChild(text)
+      shortcut = tag;
     } else {
-      shortcut = command.shortcut;
+      shortcut = document.createTextNode(command.shortcut ?? "")
     }
-    return "<tr><td>" + command.description + "</td><td>" + shortcut + "</td></tr>";
-  }).join("");
-
-  list ? list.innerHTML = inner : null;
+    let trow = document.createElement("tr")
+    let ltd = document.createElement("td")
+    let rtd = document.createElement("td")
+    let descnode = document.createTextNode(command.description || "")
+    ltd.appendChild(descnode)
+    rtd.appendChild(shortcut)
+    trow.appendChild(ltd)
+    trow.appendChild(rtd)
+    list ? list.appendChild(trow) : null
+  })
 }
