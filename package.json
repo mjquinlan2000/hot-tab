@@ -1,9 +1,16 @@
 {
   "name": "hot-tab",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "2.0.1",
+  "main": "src/index.ts",
   "author": "Michael Quinlan <mquinlan@gigsmart.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --watch",
+    "debug": "web-ext run",
+    "clean": "rm -fr web-ext-artifacts && rm -fr dist",
+    "package": "npm run clean && npm run build && web-ext build"
+  },
   "devDependencies": {
     "@types/webextension-polyfill": "^0.8.1",
     "ts-loader": "^9.2.6",
