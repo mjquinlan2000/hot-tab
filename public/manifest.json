@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Hot Tab",
+  "version": "3.0.0",
+  "description": "Keyboard shortcuts for moving, pinning, and closing Chrome tabs",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Hot Tab",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": [
+    "contextMenus"
+  ],
+  "commands": {
+    "move-left": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Left",
+        "mac": "MacCtrl+Shift+Left"
+      },
+      "description": "Move tab left"
+    },
+    "move-right": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Right",
+        "mac": "MacCtrl+Shift+Right"
+      },
+      "description": "Move tab right"
+    },
+    "pin-tab": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Down",
+        "mac": "MacCtrl+Shift+Down"
+      },
+      "description": "Toggle pin on current tab"
+    },
+    "close-other-tabs": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "MacCtrl+Shift+K"
+      },
+      "description": "Close other tabs"
+    }
+  }
+}

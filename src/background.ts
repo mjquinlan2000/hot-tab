@@ -1,0 +1,91 @@
+import { nextTabIndex } from "./tab-order.js";
+
+const MENU_ITEM_ID = "manage-shortcuts";
+const SHORTCUTS_SETTINGS_URL = "chrome://extensions/shortcuts";
+
+const moveTab = async (offset: number): Promise<void> => {
+  const tabs = await chrome.tabs.query({ currentWindow: true });
+  const activeTab = tabs.find((tab) => tab.active);
+  if (!activeTab || typeof activeTab.id !== "number") {
+    return;
+  }
+
+  const pinnedCount = tabs.filter((tab) => tab.pinned).length;
+  const destinationIndex = nextTabIndex({
+    index: activeTab.index,
+    pinned: activeTab.pinned,
+    tabCount: tabs.length,
+    pinnedCount,
+    offset,
+  });
+
+  if (destinationIndex !== null) {
+    await chrome.tabs.move(activeTab.id, { index: destinationIndex });
+  }
+};
+
+const togglePinTab = async (): Promise<void> => {
+  const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!activeTab || typeof activeTab.id !== "number") {
+    return;
+  }
+
+  await chrome.tabs.update(activeTab.id, {
+    pinned: !activeTab.pinned,
+  });
+};
+
+const closeOtherTabs = async (): Promise<void> => {
+  const tabs = await chrome.tabs.query({
+    currentWindow: true,
+    pinned: false,
+    active: false,
+  });
+
+  const tabIds: number[] = [];
+  for (const tab of tabs) {
+    if (typeof tab.id === "number") {
+      tabIds.push(tab.id);
+    }
+  }
+
+  if (tabIds.length > 0) {
+    await chrome.tabs.remove(tabIds);
+  }
+};
+
+const handleCommand = async (command: string): Promise<void> => {
+  switch (command) {
+    case "move-left":
+      await moveTab(-1);
+      break;
+    case "move-right":
+      await moveTab(1);
+      break;
+    case "pin-tab":
+      await togglePinTab();
+      break;
+    case "close-other-tabs":
+      await closeOtherTabs();
+      break;
+  }
+};
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: MENU_ITEM_ID,
+    title: "Manage keyboard shortcuts",
+    contexts: ["action"],
+  });
+});
+
+chrome.commands.onCommand.addListener((command) => {
+  void handleCommand(command);
+});
+
+chrome.contextMenus.onClicked.addListener((info) => {
+  if (info.menuItemId === MENU_ITEM_ID) {
+    void chrome.tabs.create({ url: SHORTCUTS_SETTINGS_URL });
+  }
+});
+

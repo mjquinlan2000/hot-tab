@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hot Tab</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <header class="header">
+      <img class="header__icon" src="icons/icon48.png" alt="" width="32" height="32">
+      <div class="header__info">
+        <h1 class="header__title">Hot Tab</h1>
+        <p class="header__tagline">Tab shortcuts</p>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="shortcuts-section" aria-labelledby="shortcuts-heading">
+        <h2 id="shortcuts-heading" class="section-title">Shortcuts</h2>
+        <ul id="shortcut-list" class="shortcut-list"></ul>
+        <p id="shortcut-empty" class="shortcut-empty" hidden>No shortcuts configured.</p>
+      </section>
+    </main>
+
+    <template id="shortcut-row">
+      <li class="shortcut">
+        <span class="shortcut__label"></span>
+        <span class="shortcut__keys"></span>
+      </li>
+    </template>
+
+    <footer class="footer">
+      <button type="button" id="manage-shortcuts" class="btn btn--primary">Manage keyboard shortcuts</button>
+    </footer>
+
+    <script type="module" src="js/popup.js"></script>
+  </body>
+</html>
