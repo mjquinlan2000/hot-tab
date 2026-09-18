@@ -50,7 +50,8 @@ Check **none** of the data-type boxes, then certify all three statements:
 
 ## Graphic assets
 
-Regenerate with `npm run store:assets`; every file is asserted to be exactly the required pixel size.
+Regenerate with `npm run store:assets`; each file is asserted to be exactly the required pixel size and a
+24-bit PNG with no alpha channel, which is what the dashboard accepts.
 
 |Dashboard field|File|Size|
 |---|---|---|
@@ -58,6 +59,7 @@ Regenerate with `npm run store:assets`; every file is asserted to be exactly the
 |Screenshot 2|`store/screenshots/02-popup-dark.png`|1280x800|
 |Screenshot 3|`store/screenshots/03-popup-macos.png`|1280x800|
 |Small promo tile|`store/promo/small-tile-440x280.png`|440x280|
+|Marquee promo tile (optional)|`store/promo/marquee-1400x560.png`|1400x560|
 
 The store icon comes from the packaged `icons/icon128.png`; it is not uploaded separately.
 

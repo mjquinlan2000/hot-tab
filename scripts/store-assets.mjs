@@ -70,6 +70,15 @@ const SHOTS = [
     height: 280,
     awaitPopup: false,
   },
+  {
+    output: "store/promo/marquee-1400x560.png",
+    template: "/store/templates/marquee.html",
+    query: {},
+    colorScheme: "light",
+    width: 1400,
+    height: 560,
+    awaitPopup: false,
+  },
 ];
 
 const installChromeStub = (sets) => {
@@ -111,14 +120,23 @@ const startServer = async () => {
   return { server, origin: `http://127.0.0.1:${server.address().port}` };
 };
 
-const assertPngSize = async (filePath, expectedWidth, expectedHeight) => {
+const assertPng = async (filePath, expectedWidth, expectedHeight) => {
   const header = await fs.readFile(filePath);
   const width = header.readUInt32BE(16);
   const height = header.readUInt32BE(20);
+  const bitDepth = header[24];
+  const colorType = header[25];
 
   if (width !== expectedWidth || height !== expectedHeight) {
     throw new Error(
       `${filePath} is ${width}x${height}; the Chrome Web Store requires exactly ${expectedWidth}x${expectedHeight}`
+    );
+  }
+
+  // The dashboard rejects anything but JPEG or 24-bit PNG without an alpha channel.
+  if (bitDepth !== 8 || colorType !== 2) {
+    throw new Error(
+      `${filePath} is bit depth ${bitDepth} color type ${colorType}; the Chrome Web Store requires 24-bit PNG (bit depth 8, color type 2, no alpha)`
     );
   }
 
@@ -161,7 +179,7 @@ const renderShot = async ({ browser, origin, shot }) => {
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await page.screenshot({ path: outputPath, type: "png" });
 
-    const size = await assertPngSize(outputPath, shot.width, shot.height);
+    const size = await assertPng(outputPath, shot.width, shot.height);
     console.log(`wrote ${shot.output} (${size})`);
   } finally {
     await page.close();

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hot Tab marquee promo tile</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --kbd-bg: #f8fafc;
+        --kbd-border: #cbd5e1;
+        --kbd-text: #1e293b;
+        --kbd-shadow: #94a3b8;
+      }
+
+      html,
+      body {
+        width: 1400px;
+        height: 560px;
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 80px;
+        padding: 0 80px;
+        font-family: var(--font-family);
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        flex-shrink: 0;
+      }
+
+      .brand__icon {
+        width: 128px;
+        height: 128px;
+        filter: drop-shadow(0 12px 28px rgba(15, 23, 42, 0.4));
+      }
+
+      .brand__wordmark {
+        color: #ffffff;
+        font-size: 76px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      .rows {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .row kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 46px;
+        min-height: 44px;
+        padding: 8px 12px;
+        font-family: var(--font-family);
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--kbd-text);
+        background-color: var(--kbd-bg);
+        border: 1px solid var(--kbd-border);
+        border-bottom-width: 3px;
+        border-bottom-color: var(--kbd-shadow);
+        border-radius: 7px;
+        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.22);
+      }
+
+      .row__label {
+        margin-left: 10px;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 24px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="brand">
+      <img class="brand__icon" src="/dist/icons/icon128.png" alt="">
+      <p class="brand__wordmark">Hot Tab</p>
+    </div>
+    <div class="rows">
+      <div class="row">
+        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8592;</kbd>
+        <span class="row__label">Move tab left</span>
+      </div>
+      <div class="row">
+        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8594;</kbd>
+        <span class="row__label">Move tab right</span>
+      </div>
+      <div class="row">
+        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8595;</kbd>
+        <span class="row__label">Toggle pin</span>
+      </div>
+      <div class="row">
+        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>K</kbd>
+        <span class="row__label">Close other tabs</span>
+      </div>
+    </div>
+  </body>
+</html>
