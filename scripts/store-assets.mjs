@@ -33,31 +33,53 @@ const MAC_SHORTCUTS = [
   { name: "close-other-tabs", description: "Close other tabs", shortcut: "⌃⇧K" },
 ];
 
-const SHORTCUT_SETS = { win: WINDOWS_SHORTCUTS, mac: MAC_SHORTCUTS };
+const CUSTOM_SHORTCUTS = [
+  { name: "_execute_action", description: "", shortcut: "Alt+Shift+H" },
+  { name: "move-left", description: "Move tab left", shortcut: "Alt+Shift+Left" },
+  { name: "move-right", description: "Move tab right", shortcut: "Alt+Shift+Right" },
+  { name: "pin-tab", description: "Toggle pin on current tab", shortcut: "Alt+Shift+Down" },
+  { name: "close-other-tabs", description: "Close other tabs", shortcut: "Alt+Shift+W" },
+];
 
+const SHORTCUT_SETS = { win: WINDOWS_SHORTCUTS, mac: MAC_SHORTCUTS, custom: CUSTOM_SHORTCUTS };
 const SHOTS = [
   {
-    output: "store/screenshots/01-popup-light.png",
+    output: "store/screenshots/01-manage-hotkeys.png",
     template: "/store/templates/screenshot.html",
-    query: { variant: "win", caption: "Every shortcut, one click away" },
+    query: {
+      variant: "win",
+      caption: "Manage tabs at <span>keyboard speed</span>",
+      sub: "Move tabs within pinned and unpinned bands, toggle pin states, and close other tabs without touching the mouse.",
+      badge: "Tab Management",
+    },
     colorScheme: "light",
     width: 1280,
     height: 800,
     awaitPopup: true,
   },
   {
-    output: "store/screenshots/02-popup-dark.png",
+    output: "store/screenshots/02-customize-shortcuts.png",
     template: "/store/templates/screenshot.html",
-    query: { variant: "win", caption: "Matches your dark mode" },
+    query: {
+      variant: "custom",
+      caption: "Fully <span>customizable</span> shortcuts",
+      sub: "Open shortcut settings with one click from the popup, then rebind any command to your favorite hotkeys.",
+      badge: "Full Customization",
+    },
     colorScheme: "dark",
     width: 1280,
     height: 800,
     awaitPopup: true,
   },
   {
-    output: "store/screenshots/03-popup-macos.png",
+    output: "store/screenshots/03-native-glyphs.png",
     template: "/store/templates/screenshot.html",
-    query: { variant: "mac", caption: "Native ⌃⇧ glyphs on macOS" },
+    query: {
+      variant: "mac",
+      caption: "Native <span>⌃⇧ glyphs</span> on macOS",
+      sub: "macOS displays authentic compact symbols (⌃, ⇧, ←, →, ↓, K); Windows and Linux use standard Ctrl+Shift chords.",
+      badge: "Platform Native",
+    },
     colorScheme: "light",
     width: 1280,
     height: 800,

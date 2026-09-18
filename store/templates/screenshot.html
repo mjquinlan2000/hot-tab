@@ -14,18 +14,10 @@
 
       :root {
         --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        --backdrop-from: #ea580c;
-        --backdrop-to: #9a3412;
+        --backdrop-from: #0a0b0f;
+        --backdrop-to: #141722;
         --caption-color: #ffffff;
-        --caption-sub-color: rgba(255, 255, 255, 0.72);
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --backdrop-from: #0f172a;
-          --backdrop-to: #1e293b;
-          --caption-sub-color: rgba(203, 213, 225, 0.72);
-        }
+        --caption-sub-color: rgba(203, 213, 225, 0.85);
       }
 
       html,
@@ -39,51 +31,117 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 96px;
-        padding: 80px 96px;
+        gap: 84px;
+        padding: 60px 88px;
         font-family: var(--font-family);
-        background: linear-gradient(135deg, var(--backdrop-from) 0%, var(--backdrop-to) 100%);
+        background: radial-gradient(circle at 65% 50%, var(--backdrop-to) 0%, var(--backdrop-from) 100%);
+        position: relative;
+      }
+
+      /* Ambient flame back-glow */
+      .ambient-glow {
+        position: absolute;
+        right: 140px;
+        top: 140px;
+        width: 480px;
+        height: 480px;
+        background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, rgba(234, 88, 12, 0.05) 50%, transparent 75%);
+        filter: blur(60px);
+        pointer-events: none;
       }
 
       .copy {
-        max-width: 520px;
+        max-width: 480px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .copy__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        background: rgba(249, 115, 22, 0.12);
+        border: 1px solid rgba(249, 115, 22, 0.3);
+        color: #ff8c00;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
       }
 
       .copy__caption {
         color: var(--caption-color);
-        font-size: 52px;
-        font-weight: 700;
+        font-size: 50px;
+        font-weight: 800;
         line-height: 1.15;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
+      }
+
+      .copy__caption span {
+        background: linear-gradient(135deg, #ef4444 0%, #f97316 45%, #fbbf24 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
       .copy__sub {
-        margin-top: 24px;
+        margin-top: 22px;
         color: var(--caption-sub-color);
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 400;
-        line-height: 1.45;
+        line-height: 1.5;
+        letter-spacing: -0.01em;
+      }
+
+      /* Visual container (right side) */
+      .visual-container {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
       }
 
       .popup-frame {
         width: 320px;
         border: none;
         border-radius: 12px;
-        box-shadow: 0 32px 64px rgba(15, 23, 42, 0.45);
+        box-shadow: 0 28px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
         background-color: transparent;
       }
     </style>
   </head>
   <body>
+    <div class="ambient-glow"></div>
+
     <div class="copy">
-      <p class="copy__caption" id="caption"></p>
-      <p class="copy__sub">Move, pin, and close tabs from the keyboard. Rebind anything at chrome://extensions/shortcuts.</p>
+      <div class="copy__badge" id="badge">Hot Tab for Chrome</div>
+      <h1 class="copy__caption" id="caption"></h1>
+      <p class="copy__sub" id="sub"></p>
     </div>
+
     <iframe class="popup-frame" id="popup" title="Hot Tab popup" scrolling="no"></iframe>
+
     <script>
       const params = new URLSearchParams(location.search);
       const variant = params.get("variant") ?? "win";
-      document.getElementById("caption").textContent = params.get("caption") ?? "";
+      const view = params.get("view") ?? "popup";
+
+      // Render formatted caption with gradient on emphasized words
+      const captionText = params.get("caption") ?? "";
+      document.getElementById("caption").innerHTML = captionText;
+      document.getElementById("sub").textContent = params.get("sub") ?? "";
+
+      const badgeText = params.get("badge");
+      if (badgeText) {
+        document.getElementById("badge").textContent = badgeText;
+      }
+
+
+
       document.getElementById("popup").src = `/dist/popup.html?variant=${encodeURIComponent(variant)}`;
     </script>
   </body>

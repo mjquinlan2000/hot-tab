@@ -55,9 +55,9 @@ Regenerate with `npm run store:assets`; each file is asserted to be exactly the 
 
 |Dashboard field|File|Size|
 |---|---|---|
-|Screenshot 1|`store/screenshots/01-popup-light.png`|1280x800|
-|Screenshot 2|`store/screenshots/02-popup-dark.png`|1280x800|
-|Screenshot 3|`store/screenshots/03-popup-macos.png`|1280x800|
+|Screenshot 1|`store/screenshots/01-manage-hotkeys.png`|1280x800|
+|Screenshot 2|`store/screenshots/02-customize-shortcuts.png`|1280x800|
+|Screenshot 3|`store/screenshots/03-native-glyphs.png`|1280x800|
 |Small promo tile|`store/promo/small-tile-440x280.png`|440x280|
 |Marquee promo tile (optional)|`store/promo/marquee-1400x560.png`|1400x560|
 
