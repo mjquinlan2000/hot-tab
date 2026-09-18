@@ -11,8 +11,25 @@ Starting with Chromium milestone 137 (M137+), Chrome ignores the traditional `--
 - **`web-ext run` unreliability**: Because `web-ext run` relies on CLI flags like `--load-extension`, it fails silently on current Chromium releases. The browser launches, but no extension is loaded.
 - **Manual verification path**: The primary reliable manual method for current Chrome is navigating to `chrome://extensions`, enabling "Developer mode", clicking "Load unpacked", and selecting the extension build directory.
 - **Automated verification options**:
-  1. Use an older Chromium binary (e.g., Chromium 133) that still respects the `--load-extension` flag.
-  2. Use Puppeteer Core with a browser-level Chrome DevTools Protocol (CDP) connection over pipes (`pipe: true`) and issue the internal CDP command `Extensions.loadUnpacked({ path: absPath })`.
+  1. **Reliable**: use an older Chromium binary (e.g. Chromium 133) that still respects `--load-extension`. This is the option that actually worked end to end: extension installed, popup page served, service worker inspectable.
+  2. **Unreliable, version-dependent**: `Extensions.loadUnpacked({ path })` over a browser-level CDP session (Puppeteer Core with `pipe: true`, launched with `--enable-unsafe-extension-debugging`). This is an internal, non-stable CDP domain and its behavior changes across milestones.
+
+     Observed on Chrome 153: the command **returned a plausible extension id and threw no error, yet the extension was never installed**. `chrome://extensions-internals` did not list it, no service worker target appeared, and navigating to its popup returned `ERR_BLOCKED_BY_CLIENT`. The returned id is derived from the path, so it proves nothing.
+
+     Never treat the returned id as success. Assert installation independently before running any test against it:
+
+     ```javascript
+     // A returned id is NOT proof of installation. Confirm it.
+     const { id } = await browserSession.send("Extensions.loadUnpacked", { path: absPath });
+     const page = await browser.newPage();
+     await page.goto("chrome://extensions-internals/");
+     const installed = JSON.parse(await page.evaluate(() => document.body.innerText))
+       .some((e) => e.id === id);
+     await page.close();
+     if (!installed) throw new Error(`loadUnpacked reported ${id} but nothing installed`);
+     ```
+
+     If that assertion fails, fall back to option 1 or to manual loading; do not keep refactoring the extension in response to what is an automation limitation.
 
 ### Isolated Test Profiles
 
@@ -80,8 +97,11 @@ if (!workerTarget) {
 ### 1. `ERR_BLOCKED_BY_CLIENT` on Extension URLs
 
 When navigating a standard browser tab to an internal extension URL (e.g., `chrome-extension://<id>/popup.html`), Chromium may block the navigation with `net::ERR_BLOCKED_BY_CLIENT`.
-- **Reason**: The resource is not listed in `web_accessible_resources`.
-- **Meaning**: This is default browser security enforcement, not a bug in the extension. When loaded in an environment with the extension installed, navigating directly via an extension-aware inspection page works as expected.
+- **Two distinct causes, do not conflate them**:
+  1. The extension IS installed, but the resource is not listed in `web_accessible_resources`. This is default security enforcement, not a bug.
+  2. The extension is NOT installed at all, so nothing serves that origin. This is what a silently failed `Extensions.loadUnpacked` looks like.
+- **Disambiguate before drawing conclusions**: check `chrome://extensions-internals` for the id. If the extension is absent, the block is an installation failure and no amount of manifest or `web_accessible_resources` editing will change it.
+- **Never treat this as evidence the extension code is broken**, and never refactor source in response to it.
 
 ### 2. Missing Service Worker in Target Lists
 
