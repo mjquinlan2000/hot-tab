@@ -1,6 +1,6 @@
 {
   "name": "hot-tab",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Chrome extension adding missing keyboard shortcuts for tab management",
   "private": true,
   "type": "module",
