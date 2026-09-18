@@ -1,0 +1,88 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: jdx/mise-action@v4
+
+      - run: npm ci
+
+      - name: Verify tag matches manifest and package versions
+        id: version
+        run: |
+          set -euo pipefail
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          MANIFEST_VERSION="$(node -p "require('./public/manifest.json').version")"
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ] || [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "tag $GITHUB_REF_NAME != manifest $MANIFEST_VERSION / package.json $PACKAGE_VERSION" >&2
+            exit 1
+          fi
+          echo "version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+          echo "zip=web-ext-artifacts/hot-tab-$TAG_VERSION.zip" >> "$GITHUB_OUTPUT"
+
+      - run: npm run typecheck
+
+      - run: npm run smoke
+
+      - run: npm run package
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: hot-tab-${{ steps.version.outputs.version }}
+          path: ${{ steps.version.outputs.zip }}
+          if-no-files-found: error
+
+      - uses: google-github-actions/auth@v3
+        id: auth
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/chromewebstore
+          access_token_lifetime: 600s
+          create_credentials_file: false
+          export_environment_variables: false
+
+      - name: Upload and publish to the Chrome Web Store
+        env:
+          CWS_ACCESS_TOKEN: ${{ steps.auth.outputs.access_token }}
+          CWS_PUBLISHER_ID: ${{ vars.CWS_PUBLISHER_ID }}
+          CWS_EXTENSION_ID: odmmgahbfhdcpnjccnlcnecoidkhemmg
+        run: >
+          node scripts/publish-cws.mjs
+          --zip "${{ steps.version.outputs.zip }}"
+          --expect-version "${{ steps.version.outputs.version }}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "$GITHUB_REF_NAME"
+          --title "$GITHUB_REF_NAME"
+          --generate-notes
+          "${{ steps.version.outputs.zip }}"
+
+      - name: Listing checklist
+        run: |
+          {
+            echo "### Store listing is not API-managed"
+            echo ""
+            echo "Package \`${{ steps.version.outputs.version }}\` was submitted for review. Listing text and images must be updated by hand:"
+            echo ""
+            echo "- [ ] Paste the fields from \`store/listing.md\` into Store listing / Privacy practices"
+            echo "- [ ] Upload \`store/screenshots/*.png\` (1280x800) and \`store/promo/small-tile-440x280.png\`"
+            echo "- [ ] https://chrome.google.com/webstore/devconsole/"
+          } >> "$GITHUB_STEP_SUMMARY"

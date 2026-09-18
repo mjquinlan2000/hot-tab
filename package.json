@@ -14,11 +14,14 @@
     "watch": "node scripts/build.mjs --watch",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist web-ext-artifacts",
-    "package": "rm -rf web-ext-artifacts && node scripts/build.mjs && web-ext build --source-dir dist --overwrite-dest --ignore-files \"js/*.map\"",
-    "smoke": "node scripts/build.mjs && node scripts/smoke-tab-order.mjs"
+    "package": "rm -rf web-ext-artifacts && node scripts/build.mjs && web-ext build --source-dir dist --overwrite-dest --filename \"hot-tab-{version}.zip\" --ignore-files \"js/*.map\"",
+    "smoke": "node scripts/build.mjs && node scripts/smoke-tab-order.mjs",
+    "store:assets": "node scripts/build.mjs && node scripts/store-assets.mjs",
+    "publish:cws": "node scripts/publish-cws.mjs"
   },
   "devDependencies": {
     "@types/chrome": "^0.1.28",
+    "puppeteer-core": "^25.11.0",
     "typescript": "^5.9.3",
     "web-ext": "^8.10.0"
   }

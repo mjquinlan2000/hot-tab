@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hot Tab screenshot</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --backdrop-from: #2563eb;
+        --backdrop-to: #1e40af;
+        --caption-color: #ffffff;
+        --caption-sub-color: rgba(255, 255, 255, 0.72);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --backdrop-from: #0f172a;
+          --backdrop-to: #1e293b;
+          --caption-sub-color: rgba(203, 213, 225, 0.72);
+        }
+      }
+
+      html,
+      body {
+        width: 1280px;
+        height: 800px;
+        overflow: hidden;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 96px;
+        padding: 80px 96px;
+        font-family: var(--font-family);
+        background: linear-gradient(135deg, var(--backdrop-from) 0%, var(--backdrop-to) 100%);
+      }
+
+      .copy {
+        max-width: 520px;
+      }
+
+      .copy__caption {
+        color: var(--caption-color);
+        font-size: 52px;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      .copy__sub {
+        margin-top: 24px;
+        color: var(--caption-sub-color);
+        font-size: 22px;
+        font-weight: 400;
+        line-height: 1.45;
+      }
+
+      .popup-frame {
+        width: 320px;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 32px 64px rgba(15, 23, 42, 0.45);
+        background-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="copy">
+      <p class="copy__caption" id="caption"></p>
+      <p class="copy__sub">Move, pin, and close tabs from the keyboard. Rebind anything at chrome://extensions/shortcuts.</p>
+    </div>
+    <iframe class="popup-frame" id="popup" title="Hot Tab popup" scrolling="no"></iframe>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const variant = params.get("variant") ?? "win";
+      document.getElementById("caption").textContent = params.get("caption") ?? "";
+      document.getElementById("popup").src = `/dist/popup.html?variant=${encodeURIComponent(variant)}`;
+    </script>
+  </body>
+</html>

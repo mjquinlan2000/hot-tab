@@ -78,7 +78,25 @@ Recent Chrome releases (M137+) ignore the `--load-extension` command-line switch
 npm run package
 ```
 
-Runs the build and packages the extension into a zip archive inside `web-ext-artifacts/` via `web-ext`.
+Runs the build and packages the extension into `web-ext-artifacts/hot-tab-<version>.zip` via `web-ext`.
+
+## Releasing
+
+Releases are tag-driven, and `public/manifest.json` is the source of truth for the version. CI never rewrites it.
+
+1. Bump `version` in `public/manifest.json` and `package.json` in a normal commit.
+2. Refresh the store listing if the UI changed: `npm run store:assets`, then follow `store/listing.md` and save the dashboard draft **without submitting**.
+3. Push the matching tag (`git tag v3.0.0 && git push origin v3.0.0`).
+
+`.github/workflows/release.yml` then typechecks, smoke-tests, packages, authenticates to Google via GitHub OIDC
+and Workload Identity Federation (no long-lived secrets), uploads the zip to the Chrome Web Store, submits it
+for review with publish-on-approval, and attaches the zip to a GitHub Release. The tag must match both version
+fields or the run fails before uploading anything.
+
+Store listing copy, categories, and graphic assets are not exposed by the Chrome Web Store API, so they stay a
+manual dashboard step driven by `store/listing.md`. `npm run store:assets` renders the real popup into the
+exact image sizes the store requires (1280x800 screenshots, a 440x280 promo tile) and asserts each PNG's
+dimensions. It needs a local Chrome; override the binary with `CHROME_PATH` if it is not in `/Applications`.
 
 ## Architecture
 

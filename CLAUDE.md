@@ -14,7 +14,9 @@ Compiles TypeScript directly to native ES modules via `tsc` with zero runtime de
 | `npm run typecheck` | `tsc --noEmit` | Validates TypeScript types across `src/` without emitting code |
 | `npm run smoke` | `node scripts/build.mjs && node scripts/smoke-tab-order.mjs` | Builds and runs assertion smoke tests on compiled `dist/js/tab-order.js` |
 | `npm run clean` | `rm -rf dist web-ext-artifacts` | Removes build directories and packaged zip output |
-| `npm run package` | `rm -rf web-ext-artifacts && node scripts/build.mjs && web-ext build --source-dir dist --overwrite-dest --ignore-files "js/*.map"` | Builds and packages zip archive into `web-ext-artifacts/` |
+| `npm run package` | `rm -rf web-ext-artifacts && node scripts/build.mjs && web-ext build --source-dir dist --overwrite-dest --filename "hot-tab-{version}.zip" --ignore-files "js/*.map"` | Builds and packages `web-ext-artifacts/hot-tab-<version>.zip` (explicit `--filename`; web-ext's default template would emit `hot_tab-<version>.zip`) |
+| `npm run store:assets` | `node scripts/build.mjs && node scripts/store-assets.mjs` | Renders the real popup into store-sized PNGs under `store/` and asserts each PNG's dimensions |
+| `npm run publish:cws` | `node scripts/publish-cws.mjs` | Uploads a zip to the Chrome Web Store and submits it for review; used by CI, never named `publish` (npm lifecycle hook) |
 
 Use npm; never run `yarn install` (it creates a competing lockfile). Scripts avoid nested `npm run` calls to prevent `npm_config_*` warnings under yarn environments.
 
@@ -32,7 +34,16 @@ src/                        TypeScript source compiled by tsc to dist/js/
 └── tab-order.ts            Pure wrap arithmetic for pinned and unpinned tab bands
 scripts/                    Tooling and verification scripts
 ├── build.mjs               Build runner: clears dist/, copies public/, runs tsc
-└── smoke-tab-order.mjs     Zero-dependency Node assertion test for tab-order logic
+├── smoke-tab-order.mjs     Zero-dependency Node assertion test for tab-order logic
+├── store-assets.mjs        Renders store screenshots/promo tile from dist/popup.html
+└── publish-cws.mjs         Chrome Web Store v2 upload + publish (zero dependencies)
+store/                      Chrome Web Store listing sources (not shipped in dist/)
+├── listing.md              Source of truth for dashboard copy, categories, privacy answers
+├── templates/              HTML backdrops the asset generator screenshots
+├── screenshots/            Generated 1280x800 listing screenshots (committed)
+└── promo/                  Generated 440x280 small promo tile (committed)
+.github/workflows/
+└── release.yml             Tag-driven release: build, OIDC auth, CWS upload, GitHub Release
 ```
 
 ## Hard Rules
@@ -45,6 +56,9 @@ scripts/                    Tooling and verification scripts
 - **Isolate command logic in pure modules**: Extension keyboard commands cannot be dispatched programmatically; keep tab arithmetic and manipulation logic in pure modules (like `tab-order.ts`) so they remain verifiable in Node.
 - **Manifest shortcut syntax**: On macOS, `Ctrl` represents Command (`⌘`). Use `MacCtrl` for literal Control (`⌃`). Chrome permits at most 4 `suggested_key` commands per extension.
 - **Asset separation**: Static files belong in `public/` and compiled scripts in `dist/js/`. Never edit `dist/` directly.
+- **Chrome Web Store listing is not API-managed**: API v2 exposes only `media.upload`, `publishers.items.publish`, `fetchStatus`, `fetchReviews`, `cancelSubmission`, and `setPublishedDeployPercentage`. Listing copy, category, screenshots, and promo tiles have no endpoint — edit them in the dashboard from `store/listing.md`. Never script the dashboard UI.
+- **Release auth uses OIDC, not secrets**: `release.yml` mints a short-lived Google access token via Workload Identity Federation (`vars.GCP_WORKLOAD_IDENTITY_PROVIDER`, `vars.GCP_SERVICE_ACCOUNT`, `vars.CWS_PUBLISHER_ID`). No repo secret exists; do not add `chrome-webstore-upload-cli`, which only accepts client ID/secret/refresh-token triples.
+- **Never regenerate store assets in CI**: system fonts differ between macOS and Ubuntu runners, so a byte-diff gate on `store/screenshots/*.png` would be permanently red. Regenerate locally and commit.
 
 ## Verifying Changes
 
