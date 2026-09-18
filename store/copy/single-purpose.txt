@@ -1,0 +1,1 @@
+Hot Tab provides keyboard shortcuts for managing tabs in the current window: move the active tab left or right within its pinned or unpinned band, toggle the active tab's pinned state, and close the window's other unpinned tabs.

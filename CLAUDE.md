@@ -38,7 +38,8 @@ scripts/                    Tooling and verification scripts
 ├── store-assets.mjs        Renders store screenshots/promo tile from dist/popup.html
 └── publish-cws.mjs         Chrome Web Store v2 upload + publish (zero dependencies)
 store/                      Chrome Web Store listing sources (not shipped in dist/)
-├── listing.md              Source of truth for dashboard copy, categories, privacy answers
+├── listing.md              Dashboard field map: category, privacy answers, asset table
+├── copy/                   Plain-text paste payloads (CWS renders no Markdown or HTML)
 ├── templates/              HTML backdrops the asset generator screenshots
 ├── screenshots/            Generated 1280x800 listing screenshots (committed)
 └── promo/                  Generated 440x280 small promo tile (committed)
