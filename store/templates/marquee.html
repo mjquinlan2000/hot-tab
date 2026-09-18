@@ -62,41 +62,33 @@
       .rows {
         display: flex;
         flex-direction: column;
-        gap: 22px;
+        gap: 26px;
       }
 
       .row {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 18px;
       }
 
       .row kbd {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 46px;
-        min-height: 44px;
-        padding: 8px 12px;
+        min-width: 62px;
+        min-height: 58px;
+        padding: 10px 14px;
         font-family: var(--font-family);
-        font-size: 22px;
+        font-size: 30px;
         font-weight: 600;
         line-height: 1;
         color: var(--kbd-text);
         background-color: var(--kbd-bg);
         border: 1px solid var(--kbd-border);
-        border-bottom-width: 3px;
+        border-bottom-width: 4px;
         border-bottom-color: var(--kbd-shadow);
-        border-radius: 7px;
-        box-shadow: 0 6px 14px rgba(15, 23, 42, 0.22);
-      }
-
-      .row__label {
-        margin-left: 10px;
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 24px;
-        font-weight: 500;
-        white-space: nowrap;
+        border-radius: 9px;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.22);
       }
     </style>
   </head>
@@ -108,19 +100,15 @@
     <div class="rows">
       <div class="row">
         <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8592;</kbd>
-        <span class="row__label">Move tab left</span>
       </div>
       <div class="row">
         <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8594;</kbd>
-        <span class="row__label">Move tab right</span>
       </div>
       <div class="row">
         <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8595;</kbd>
-        <span class="row__label">Toggle pin</span>
       </div>
       <div class="row">
         <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>K</kbd>
-        <span class="row__label">Close other tabs</span>
       </div>
     </div>
   </body>
