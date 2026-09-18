@@ -1,4 +1,5 @@
 import webex from 'webextension-polyfill'
+import { Tabs } from 'webextension-polyfill'
 
 const moveTab = async (offset: number) => {
   const tabs = await webex.tabs.query({ currentWindow: true })
@@ -25,15 +26,15 @@ const moveTab = async (offset: number) => {
       newIndex = tabs.length - 1;
     }
   }
-
-  typeof activeTab.id === "number" ? await webex.tabs.move(activeTab.id, { index: newIndex }) : null;
+  const moveParams: Tabs.MoveMovePropertiesType = { index: newIndex }
+  typeof activeTab.id === "number" ? await webex.tabs.move(activeTab.id, moveParams) : null;
 };
 
 const togglePinTab = async () => {
   const tabs = await webex.tabs.query({ active: true })
   const activeTab = tabs[0];
 
-  const properties = {
+  const properties: Tabs.UpdateUpdatePropertiesType = {
     pinned: !activeTab.pinned
   };
 
@@ -41,9 +42,10 @@ const togglePinTab = async () => {
 };
 
 const closeOtherTabs = async () => {
-  const tabs = await webex.tabs.query({ currentWindow: true, pinned: false, active: false })
+  const queryInfo: Tabs.QueryQueryInfoType = { currentWindow: true, pinned: false, active: false }
+  const tabs = await webex.tabs.query(queryInfo)
   const outer: number[] = []
-  
+
   var tabIds: number[] = tabs.reduce((acc, tab) => {
     if (typeof tab.id === "number") {
       return [tab.id, ...acc]
@@ -78,5 +80,9 @@ webex.commands.onCommand.addListener(commandListener)
 webex.contextMenus.create({
   id: "manage-shortcuts",
   title: "Manage Keyboard Shortcuts",
-  contexts: ["browser_action"]
+  contexts: ["action"]
 });
+
+webex.contextMenus.onClicked.addListener(() => {
+  webex.tabs.create({ url: "chrome://extensions/shortcuts" })
+})

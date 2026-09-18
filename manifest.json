@@ -1,16 +1,23 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Hot Tab",
-  "version": "2.0",
+  "version": "2.0.2",
   "description": "Move tabs easier",
   "icons": {
     "48": "icons/icon48.png"
   },
   "background": {
-    "scripts": ["dist/shared.js", "dist/index.js"]
+    "service_worker": "dist/index.js",
+    "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{afcc7927-8549-4984-94fc-3de74ad3c23f}",
+      "strict_min_version": "109.0"
+    }
   },
   "permissions": ["contextMenus"],
-  "browser_action": {
+  "action": {
     "default_title": "Hot Tab",
     "default_popup": "popup.html",
     "default_icon": "icons/icon128.png"

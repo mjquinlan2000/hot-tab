@@ -3,8 +3,7 @@ const path = require("path")
 module.exports = {
   entry: {
     index: {
-      import: "./index.ts",
-      dependOn: "shared"
+      import: "./index.ts"
     },
     popup: {
       import: "./popup.ts",
