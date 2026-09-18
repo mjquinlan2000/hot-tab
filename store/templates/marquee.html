@@ -12,6 +12,14 @@
         padding: 0;
       }
 
+      :root {
+        --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --kbd-bg: #181a24;
+        --kbd-border: #282c3c;
+        --kbd-text: #f8fafc;
+        --kbd-shadow: #08090d;
+      }
+
       html,
       body {
         width: 1400px;
@@ -22,32 +30,155 @@
       body {
         display: flex;
         align-items: center;
-        justify-content: center;
-        background: radial-gradient(circle at 50% 50%, #1c1424 0%, #08090e 100%);
+        justify-content: flex-end;
+        padding-right: 90px;
+        font-family: var(--font-family);
+        background-color: #0a0b0f;
+        background-image: url("/assets/promo-hero-clean.png");
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: contain;
         position: relative;
       }
 
-      /* Expansive Ambient Flame Glow */
+      /* Dark Vignette Overlay to ensure pure black negative space on the right */
+      .vignette-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, 
+          rgba(10, 11, 15, 0) 0%, 
+          rgba(10, 11, 15, 0.2) 28%, 
+          rgba(10, 11, 15, 0.8) 50%, 
+          rgba(10, 11, 15, 0.98) 64%, 
+          #0a0b0f 78%, 
+          #0a0b0f 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Ambient heat glow behind title */
       .ambient-glow {
         position: absolute;
-        width: 800px;
-        height: 480px;
-        background: radial-gradient(ellipse at 50% 50%, rgba(249, 115, 22, 0.32) 0%, rgba(234, 88, 12, 0.16) 45%, rgba(220, 38, 38, 0.05) 75%, transparent 90%);
-        filter: blur(54px);
+        right: 220px;
+        top: 80px;
+        width: 520px;
+        height: 380px;
+        background: radial-gradient(ellipse at 50% 50%, rgba(249, 115, 22, 0.16) 0%, rgba(234, 88, 12, 0.06) 50%, transparent 80%);
+        filter: blur(52px);
         pointer-events: none;
+        z-index: 1;
       }
 
-      .icon {
-        width: 280px;
-        height: 280px;
-        filter: drop-shadow(0 28px 60px rgba(249, 115, 22, 0.5));
+      /* Right-hand content block */
+      .content-right {
         position: relative;
-        z-index: 1;
+        z-index: 2;
+        width: 580px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .wordmark {
+        color: #ffffff;
+        font-size: 88px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1;
+      }
+
+      .wordmark span {
+        background: linear-gradient(135deg, #ef4444 0%, #f97316 45%, #fbbf24 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Grid of keyboard glyphs fading out toward the bottom right */
+      .glyph-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0) 100%);
+        -webkit-mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0) 100%);
+      }
+
+      .glyph-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .glyph-row kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 48px;
+        min-height: 44px;
+        padding: 8px 14px;
+        font-family: var(--font-family);
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--kbd-text);
+        background-color: var(--kbd-bg);
+        border: 1px solid var(--kbd-border);
+        border-bottom-width: 3px;
+        border-bottom-color: var(--kbd-shadow);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      }
+
+      .glyph-row kbd.wide {
+        min-width: 76px;
+        font-size: 15px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .glyph-row kbd.accent {
+        border-color: rgba(249, 115, 22, 0.4);
+        color: #ffedd5;
+        box-shadow: 0 4px 14px rgba(249, 115, 22, 0.2);
       }
     </style>
   </head>
   <body>
+    <div class="vignette-overlay"></div>
     <div class="ambient-glow"></div>
-    <img class="icon" src="/dist/icons/icon128.png" alt="Hot Tab">
+
+    <div class="content-right">
+      <h1 class="wordmark">Hot <span>Tab</span></h1>
+
+      <div class="glyph-grid">
+        <div class="glyph-row">
+          <kbd class="accent">&#8963;</kbd>
+          <kbd class="accent">&#8679;</kbd>
+          <kbd class="accent">&#8592;</kbd>
+          <kbd>&#8594;</kbd>
+          <kbd>&#8595;</kbd>
+          <kbd>K</kbd>
+          <kbd class="wide">Tab</kbd>
+        </div>
+        <div class="glyph-row">
+          <kbd>&#8997;</kbd>
+          <kbd>&#8984;</kbd>
+          <kbd>W</kbd>
+          <kbd>T</kbd>
+          <kbd>H</kbd>
+          <kbd>R</kbd>
+          <kbd class="wide">Shift</kbd>
+        </div>
+        <div class="glyph-row">
+          <kbd>Esc</kbd>
+          <kbd>1</kbd>
+          <kbd>2</kbd>
+          <kbd>3</kbd>
+          <kbd>8</kbd>
+          <kbd>9</kbd>
+          <kbd class="wide">Ctrl</kbd>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

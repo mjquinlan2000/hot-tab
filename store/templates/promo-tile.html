@@ -12,6 +12,14 @@
         padding: 0;
       }
 
+      :root {
+        --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --kbd-bg: #181a24;
+        --kbd-border: #282c3c;
+        --kbd-text: #f8fafc;
+        --kbd-shadow: #08090d;
+      }
+
       html,
       body {
         width: 440px;
@@ -22,32 +30,124 @@
       body {
         display: flex;
         align-items: center;
-        justify-content: center;
-        background: radial-gradient(circle at 50% 50%, #1c1524 0%, #090a0f 100%);
+        justify-content: flex-end;
+        padding-right: 28px;
+        font-family: var(--font-family);
+        background-color: #0a0b0f;
+        background-image: url("/assets/promo-hero-clean.png");
+        background-position: -24px center;
+        background-repeat: no-repeat;
+        background-size: cover;
         position: relative;
       }
 
-      /* Ambient flame back-glow */
-      .ambient-glow {
+      /* Dark Vignette Overlay for right-hand text readability */
+      .vignette-overlay {
         position: absolute;
-        width: 300px;
-        height: 200px;
-        background: radial-gradient(ellipse at 50% 50%, rgba(249, 115, 22, 0.35) 0%, rgba(234, 88, 12, 0.18) 45%, rgba(220, 38, 38, 0.06) 75%, transparent 90%);
-        filter: blur(28px);
+        inset: 0;
+        background: linear-gradient(90deg, 
+          rgba(10, 11, 15, 0) 0%, 
+          rgba(10, 11, 15, 0.15) 28%, 
+          rgba(10, 11, 15, 0.75) 48%, 
+          rgba(10, 11, 15, 0.96) 64%, 
+          #0a0b0f 80%, 
+          #0a0b0f 100%
+        );
         pointer-events: none;
+        z-index: 1;
       }
 
-      .icon {
-        width: 140px;
-        height: 140px;
-        filter: drop-shadow(0 16px 36px rgba(249, 115, 22, 0.45));
+      /* Right-hand content block */
+      .content-right {
         position: relative;
-        z-index: 1;
+        z-index: 2;
+        width: 196px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .wordmark {
+        color: #ffffff;
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1;
+      }
+
+      .wordmark span {
+        background: linear-gradient(135deg, #ef4444 0%, #f97316 45%, #fbbf24 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Compact glyph grid fading toward the bottom right */
+      .glyph-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 25%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0) 100%);
+        -webkit-mask-image: linear-gradient(135deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 25%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0) 100%);
+      }
+
+      .glyph-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .glyph-row kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        min-height: 30px;
+        padding: 5px 8px;
+        font-family: var(--font-family);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--kbd-text);
+        background-color: var(--kbd-bg);
+        border: 1px solid var(--kbd-border);
+        border-bottom-width: 2px;
+        border-bottom-color: var(--kbd-shadow);
+        border-radius: 5px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      .glyph-row kbd.wide {
+        min-width: 46px;
+        font-size: 11px;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+
+      .glyph-row kbd.accent {
+        border-color: rgba(249, 115, 22, 0.4);
+        color: #ffedd5;
       }
     </style>
   </head>
   <body>
-    <div class="ambient-glow"></div>
-    <img class="icon" src="/dist/icons/icon128.png" alt="Hot Tab">
+    <div class="vignette-overlay"></div>
+
+    <div class="content-right">
+      <h1 class="wordmark">Hot <span>Tab</span></h1>
+
+      <div class="glyph-grid">
+        <div class="glyph-row">
+          <kbd class="accent">&#8963;</kbd>
+          <kbd class="accent">&#8679;</kbd>
+          <kbd class="accent">&#8592;</kbd>
+          <kbd>&#8594;</kbd>
+        </div>
+        <div class="glyph-row">
+          <kbd>&#8595;</kbd>
+          <kbd>K</kbd>
+          <kbd class="wide">Tab</kbd>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
