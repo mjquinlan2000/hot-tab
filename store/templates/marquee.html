@@ -12,14 +12,6 @@
         padding: 0;
       }
 
-      :root {
-        --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        --kbd-bg: #f8fafc;
-        --kbd-border: #cbd5e1;
-        --kbd-text: #1e293b;
-        --kbd-shadow: #94a3b8;
-      }
-
       html,
       body {
         width: 1400px;
@@ -31,85 +23,31 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 80px;
-        padding: 0 80px;
-        font-family: var(--font-family);
-        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        background: radial-gradient(circle at 50% 50%, #1c1424 0%, #08090e 100%);
+        position: relative;
       }
 
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 32px;
-        flex-shrink: 0;
+      /* Expansive Ambient Flame Glow */
+      .ambient-glow {
+        position: absolute;
+        width: 800px;
+        height: 480px;
+        background: radial-gradient(ellipse at 50% 50%, rgba(249, 115, 22, 0.32) 0%, rgba(234, 88, 12, 0.16) 45%, rgba(220, 38, 38, 0.05) 75%, transparent 90%);
+        filter: blur(54px);
+        pointer-events: none;
       }
 
-      .brand__icon {
-        width: 128px;
-        height: 128px;
-        filter: drop-shadow(0 12px 28px rgba(15, 23, 42, 0.4));
-      }
-
-      .brand__wordmark {
-        color: #ffffff;
-        font-size: 76px;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1;
-        white-space: nowrap;
-      }
-
-      .rows {
-        display: flex;
-        flex-direction: column;
-        gap: 26px;
-      }
-
-      .row {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-      }
-
-      .row kbd {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 62px;
-        min-height: 58px;
-        padding: 10px 14px;
-        font-family: var(--font-family);
-        font-size: 30px;
-        font-weight: 600;
-        line-height: 1;
-        color: var(--kbd-text);
-        background-color: var(--kbd-bg);
-        border: 1px solid var(--kbd-border);
-        border-bottom-width: 4px;
-        border-bottom-color: var(--kbd-shadow);
-        border-radius: 9px;
-        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.22);
+      .icon {
+        width: 280px;
+        height: 280px;
+        filter: drop-shadow(0 28px 60px rgba(249, 115, 22, 0.5));
+        position: relative;
+        z-index: 1;
       }
     </style>
   </head>
   <body>
-    <div class="brand">
-      <img class="brand__icon" src="/dist/icons/icon128.png" alt="">
-      <p class="brand__wordmark">Hot Tab</p>
-    </div>
-    <div class="rows">
-      <div class="row">
-        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8592;</kbd>
-      </div>
-      <div class="row">
-        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8594;</kbd>
-      </div>
-      <div class="row">
-        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>&#8595;</kbd>
-      </div>
-      <div class="row">
-        <kbd>&#8963;</kbd><kbd>&#8679;</kbd><kbd>K</kbd>
-      </div>
-    </div>
+    <div class="ambient-glow"></div>
+    <img class="icon" src="/dist/icons/icon128.png" alt="Hot Tab">
   </body>
 </html>

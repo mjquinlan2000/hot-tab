@@ -12,14 +12,6 @@
         padding: 0;
       }
 
-      :root {
-        --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        --kbd-bg: #f8fafc;
-        --kbd-border: #cbd5e1;
-        --kbd-text: #1e293b;
-        --kbd-shadow: #94a3b8;
-      }
-
       html,
       body {
         width: 440px;
@@ -29,60 +21,33 @@
 
       body {
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 18px;
-        font-family: var(--font-family);
-        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        background: radial-gradient(circle at 50% 50%, #1c1524 0%, #090a0f 100%);
+        position: relative;
+      }
+
+      /* Ambient flame back-glow */
+      .ambient-glow {
+        position: absolute;
+        width: 300px;
+        height: 200px;
+        background: radial-gradient(ellipse at 50% 50%, rgba(249, 115, 22, 0.35) 0%, rgba(234, 88, 12, 0.18) 45%, rgba(220, 38, 38, 0.06) 75%, transparent 90%);
+        filter: blur(28px);
+        pointer-events: none;
       }
 
       .icon {
-        width: 72px;
-        height: 72px;
-        filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.35));
-      }
-
-      .wordmark {
-        color: #ffffff;
-        font-size: 40px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        line-height: 1;
-      }
-
-      .caps {
-        display: flex;
-        gap: 10px;
-      }
-
-      .caps kbd {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 34px;
-        min-height: 32px;
-        padding: 6px 9px;
-        font-family: var(--font-family);
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 1;
-        color: var(--kbd-text);
-        background-color: var(--kbd-bg);
-        border: 1px solid var(--kbd-border);
-        border-bottom-width: 2px;
-        border-bottom-color: var(--kbd-shadow);
-        border-radius: 5px;
+        width: 140px;
+        height: 140px;
+        filter: drop-shadow(0 16px 36px rgba(249, 115, 22, 0.45));
+        position: relative;
+        z-index: 1;
       }
     </style>
   </head>
   <body>
-    <img class="icon" src="/dist/icons/icon128.png" alt="">
-    <p class="wordmark">Hot Tab</p>
-    <div class="caps">
-      <kbd>&#8963;</kbd>
-      <kbd>&#8679;</kbd>
-      <kbd>&#8592;</kbd>
-    </div>
+    <div class="ambient-glow"></div>
+    <img class="icon" src="/dist/icons/icon128.png" alt="Hot Tab">
   </body>
 </html>
