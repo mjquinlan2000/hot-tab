@@ -31,13 +31,11 @@ is exactly what is committed.
 
 Paste `store/copy/single-purpose.txt` verbatim.
 
-### Permission justification — `contextMenus`
+### Permission justifications
 
-Paste `store/copy/permission-contextmenus.txt` verbatim.
-
-### Permission justification — `tabGroups`
-
-Paste `store/copy/permission-tabgroups.txt` verbatim.
+All permission justifications live in `store/copy/permission-justifications.txt`, one labelled block
+per permission. The `[contextMenus]` / `[tabGroups]` labels are file markers, not copy: paste only the
+paragraph under a label into that permission's field.
 
 ### Remote code
 
