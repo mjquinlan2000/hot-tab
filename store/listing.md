@@ -33,10 +33,9 @@ Paste `store/copy/single-purpose.txt` verbatim.
 
 ### Permission justifications
 
-Each permission has its own dashboard field with a hard **1,000 character limit**, so each file below
-is exactly one field's payload and is pasted whole. They were briefly merged into a single file; that
-file was 1,010 characters, so pasting it into a field truncated it and put both justifications in the
-`contextMenus` box. Do not merge them again.
+Each permission has its own dashboard field with a hard **1,000 character limit**. Paste each field
+from its own file, whole; never combine files, and keep every justification at or under 1,000
+characters.
 
 |Dashboard field|File|Chars|
 |---|---|---|
