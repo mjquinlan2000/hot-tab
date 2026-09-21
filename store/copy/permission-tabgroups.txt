@@ -1,5 +1,1 @@
-[contextMenus]
-The extension registers exactly one context menu item, "Manage keyboard shortcuts", scoped to its own toolbar action (contexts: ["action"]). Clicking it opens chrome://extensions/shortcuts. No page, selection, or link contexts are used. Tab moving, pinning, and closing use chrome.tabs methods that require no host or "tabs" permission. The only other permission requested is tabGroups, which reports whether a neighboring tab group is collapsed.
-
-[tabGroups]
 The move-tab shortcuts need to know whether the tab group next to the active tab is collapsed. chrome.tabs reports which group a tab belongs to but not whether that group is collapsed, so the extension calls chrome.tabGroups.query with collapsed: true for the current window and uses the result to decide between adding the tab to the group and moving it past the collapsed group in a single step. The extension never creates, renames, recolors, or closes a group, and it reads nothing about a group beyond its id and collapsed state.

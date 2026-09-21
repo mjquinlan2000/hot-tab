@@ -33,9 +33,15 @@ Paste `store/copy/single-purpose.txt` verbatim.
 
 ### Permission justifications
 
-All permission justifications live in `store/copy/permission-justifications.txt`, one labelled block
-per permission. The `[contextMenus]` / `[tabGroups]` labels are file markers, not copy: paste only the
-paragraph under a label into that permission's field.
+Each permission has its own dashboard field with a hard **1,000 character limit**, so each file below
+is exactly one field's payload and is pasted whole. They were briefly merged into a single file; that
+file was 1,010 characters, so pasting it into a field truncated it and put both justifications in the
+`contextMenus` box. Do not merge them again.
+
+|Dashboard field|File|Chars|
+|---|---|---|
+|Permission justification — `contextMenus`|`store/copy/permission-contextmenus.txt`|446|
+|Permission justification — `tabGroups`|`store/copy/permission-tabgroups.txt`|534|
 
 ### Remote code
 
