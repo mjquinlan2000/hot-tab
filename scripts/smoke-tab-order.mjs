@@ -135,17 +135,37 @@ runPlanCase(
   { kind: "move", index: 2 }
 );
 
-// 15. Leaving a group stays positional (Chrome ungroups the tab)
+// 15. Leaving a group consumes the press: the tab keeps its slot and is only ungrouped
 runPlanCase(
-  "tab at a group's last slot moves out positionally",
+  "tab at a group's last slot leaves the group in place",
   { tabs: [u, g(7), g(7), u], activeIndex: 2, offset: 1, collapsedGroupIds: [] },
-  { kind: "move", index: 3 }
+  { kind: "exit" }
+);
+runPlanCase(
+  "tab at a group's first slot leaves the group in place moving left",
+  { tabs: [u, g(7), g(7), u], activeIndex: 1, offset: -1, collapsedGroupIds: [] },
+  { kind: "exit" }
+);
+runPlanCase(
+  "grouped tab wrapping across the band leaves the group instead of wrapping",
+  { tabs: [u, g(7), g(7)], activeIndex: 2, offset: 1, collapsedGroupIds: [] },
+  { kind: "exit" }
+);
+runPlanCase(
+  "grouped tab facing a collapsed group leaves its own group first",
+  { tabs: [g(7), g(9), g(9)], activeIndex: 0, offset: 1, collapsedGroupIds: [9] },
+  { kind: "exit" }
 );
 
-// 16. Group-to-group hop joins the neighboring group in place
+// 16. Group-to-group: the first press leaves the old group, a later press joins the new one
 runPlanCase(
-  "tab at a group's edge joins the adjacent group without moving",
+  "tab at a group's edge facing another group leaves its own group first",
   { tabs: [g(7), g(7), g(8), g(8)], activeIndex: 1, offset: 1, collapsedGroupIds: [] },
+  { kind: "exit" }
+);
+runPlanCase(
+  "ungrouped tab between two groups joins the one it moves toward",
+  { tabs: [g(7), u, g(8), g(8)], activeIndex: 1, offset: 1, collapsedGroupIds: [] },
   { kind: "join", groupId: 8, index: 1 }
 );
 

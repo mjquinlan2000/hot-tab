@@ -1,6 +1,6 @@
 Hot Tab adds the tab-management keyboard shortcuts Chrome never shipped.
 
-Move the active tab left or right, pin or unpin it, or close every other tab in the window without reaching for the mouse. Moving wraps within a band, so a pinned tab stays among the pinned tabs and an unpinned tab stays among the unpinned ones. When the next tab over belongs to a tab group, the first press joins that group without moving the tab, and a collapsed group is stepped over in a single press.
+Move the active tab left or right, pin or unpin it, or close every other tab in the window without reaching for the mouse. Moving wraps within a band, so a pinned tab stays among the pinned tabs and an unpinned tab stays among the unpinned ones. When the next tab over belongs to a tab group, the first press joins that group without moving the tab; pressing outward from the group's edge takes the tab out of the group without moving it either; and a collapsed group is stepped over in a single press.
 
 Default shortcuts
 - Move tab left: Ctrl+Shift+Left (macOS: Control+Shift+Left)

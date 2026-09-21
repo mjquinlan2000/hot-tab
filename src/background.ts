@@ -29,6 +29,12 @@ const moveTab = async (offset: number): Promise<void> => {
     return;
   }
 
+  if (plan.kind === "exit") {
+    // Leaving a group consumes the press: the tab keeps its slot, so there is no move to make.
+    await chrome.tabs.ungroup(activeTab.id);
+    return;
+  }
+
   if (plan.kind === "join") {
     try {
       await chrome.tabs.group({ groupId: plan.groupId, tabIds: activeTab.id });
