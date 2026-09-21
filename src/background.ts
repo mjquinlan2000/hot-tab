@@ -1,4 +1,4 @@
-import { nextTabIndex } from "./tab-order.js";
+import { planTabMove, TAB_GROUP_ID_NONE } from "./tab-order.js";
 
 const MENU_ITEM_ID = "manage-shortcuts";
 const SHORTCUTS_SETTINGS_URL = "chrome://extensions/shortcuts";
@@ -10,18 +10,38 @@ const moveTab = async (offset: number): Promise<void> => {
     return;
   }
 
-  const pinnedCount = tabs.filter((tab) => tab.pinned).length;
-  const destinationIndex = nextTabIndex({
-    index: activeTab.index,
-    pinned: activeTab.pinned,
-    tabCount: tabs.length,
-    pinnedCount,
+  const strip = [...tabs].sort((a, b) => a.index - b.index);
+  const hasGroupedTab = strip.some((tab) => tab.groupId !== TAB_GROUP_ID_NONE);
+  const collapsedGroupIds = hasGroupedTab
+    ? (await chrome.tabGroups.query({ windowId: activeTab.windowId, collapsed: true })).map(
+        (group) => group.id
+      )
+    : [];
+
+  const plan = planTabMove({
+    tabs: strip.map((tab) => ({ pinned: tab.pinned, groupId: tab.groupId })),
+    activeIndex: activeTab.index,
     offset,
+    collapsedGroupIds,
   });
 
-  if (destinationIndex !== null) {
-    await chrome.tabs.move(activeTab.id, { index: destinationIndex });
+  if (plan === null) {
+    return;
   }
+
+  if (plan.kind === "join") {
+    try {
+      await chrome.tabs.group({ groupId: plan.groupId, tabIds: activeTab.id });
+    } catch {
+      // Group closed between the query and the call, or the strip is mid-drag; the next press
+      // re-reads the strip.
+      return;
+    }
+  }
+
+  // A no-op when Chrome keeps the tab at the group's near edge; restores the slot when Chrome
+  // appends it to the group's far end.
+  await chrome.tabs.move(activeTab.id, { index: plan.index });
 };
 
 const togglePinTab = async (): Promise<void> => {

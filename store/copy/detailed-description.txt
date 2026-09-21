@@ -1,6 +1,6 @@
 Hot Tab adds the tab-management keyboard shortcuts Chrome never shipped.
 
-Move the active tab left or right, pin or unpin it, or close every other tab in the window without reaching for the mouse. Moving wraps within a band, so a pinned tab stays among the pinned tabs and an unpinned tab stays among the unpinned ones.
+Move the active tab left or right, pin or unpin it, or close every other tab in the window without reaching for the mouse. Moving wraps within a band, so a pinned tab stays among the pinned tabs and an unpinned tab stays among the unpinned ones. When the next tab over belongs to a tab group, the first press joins that group without moving the tab, and a collapsed group is stepped over in a single press.
 
 Default shortcuts
 - Move tab left: Ctrl+Shift+Left (macOS: Control+Shift+Left)
@@ -10,6 +10,6 @@ Default shortcuts
 
 Every binding is yours to change at chrome://extensions/shortcuts. Click the toolbar icon to see the shortcuts that are actually active right now, including ones you have rebound, and to jump straight to those settings.
 
-Built on Manifest V3: no remote code, no analytics, no network requests, and no data collection of any kind. Hot Tab requests one permission, contextMenus, for the right-click entry on its own toolbar icon.
+Built on Manifest V3: no remote code, no analytics, no network requests, and no data collection of any kind. Hot Tab requests two permissions: contextMenus for the right-click entry on its own toolbar icon, and tabGroups to see whether a neighboring tab group is collapsed.
 
 Open source (MIT): https://github.com/mjquinlan2000/hot-tab

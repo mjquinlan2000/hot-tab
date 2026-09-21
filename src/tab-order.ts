@@ -50,3 +50,86 @@ export const nextTabIndex = (input: {
 
   return destinationIndex;
 };
+
+/** Mirrors `chrome.tabGroups.TAB_GROUP_ID_NONE`; redeclared so this module stays runnable in Node. */
+export const TAB_GROUP_ID_NONE = -1;
+
+export interface TabStripEntry {
+  readonly pinned: boolean;
+  readonly groupId: number;
+}
+
+/**
+ * `move`: call `chrome.tabs.move` to `index`.
+ * `join`: call `chrome.tabs.group` for `groupId`, then `chrome.tabs.move` back to `index`
+ * (the tab's current index) because Chrome may relocate a newly grouped tab to the group's far edge.
+ */
+export type TabMovePlan =
+  | { readonly kind: "move"; readonly index: number }
+  | { readonly kind: "join"; readonly groupId: number; readonly index: number };
+
+/**
+ * Resolves one move-hotkey press into a concrete tab-strip operation.
+ *
+ * Moving toward an adjacent expanded group joins that group in place; subsequent presses walk
+ * through it positionally. A collapsed group is one visual chip, so it is stepped over whole in a
+ * single press. Wrap-around and multi-step offsets stay purely positional.
+ */
+export const planTabMove = (input: {
+  readonly tabs: readonly TabStripEntry[];
+  readonly activeIndex: number;
+  readonly offset: number;
+  readonly collapsedGroupIds: readonly number[];
+}): TabMovePlan | null => {
+  const { tabs, activeIndex, offset, collapsedGroupIds } = input;
+
+  if (!Number.isInteger(activeIndex) || activeIndex < 0 || activeIndex >= tabs.length) {
+    return null;
+  }
+
+  const active = tabs[activeIndex];
+
+  // The pinned prefix run, not a count of pinned tabs: a malformed strip cannot forge a band.
+  let pinnedCount = 0;
+  while (pinnedCount < tabs.length && tabs[pinnedCount].pinned) {
+    pinnedCount += 1;
+  }
+
+  const destination = nextTabIndex({
+    index: activeIndex,
+    pinned: active.pinned,
+    tabCount: tabs.length,
+    pinnedCount,
+    offset,
+  });
+  if (destination === null) {
+    return null;
+  }
+
+  const step = Math.sign(offset);
+
+  // A wrap destination is always the outer edge of the band, where Chrome leaves the tab ungrouped.
+  if (Math.abs(offset) !== 1 || destination !== activeIndex + step) {
+    return { kind: "move", index: destination };
+  }
+
+  const neighbor = tabs[destination];
+  if (neighbor.groupId === TAB_GROUP_ID_NONE || neighbor.groupId === active.groupId) {
+    return { kind: "move", index: destination };
+  }
+
+  if (collapsedGroupIds.includes(neighbor.groupId)) {
+    // Pinned tabs are always ungrouped, so this run terminates inside the unpinned band.
+    let edge = destination;
+    while (
+      edge + step >= 0 &&
+      edge + step < tabs.length &&
+      tabs[edge + step].groupId === neighbor.groupId
+    ) {
+      edge += step;
+    }
+    return { kind: "move", index: edge };
+  }
+
+  return { kind: "join", groupId: neighbor.groupId, index: activeIndex };
+};
