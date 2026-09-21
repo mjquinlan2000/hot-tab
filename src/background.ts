@@ -31,7 +31,13 @@ const moveTab = async (offset: number): Promise<void> => {
 
   if (plan.kind === "exit") {
     // Leaving a group consumes the press: the tab keeps its slot, so there is no move to make.
-    await chrome.tabs.ungroup(activeTab.id);
+    try {
+      await chrome.tabs.ungroup(activeTab.id);
+    } catch {
+      // Tab or group closed between the query and the call; the next press re-reads the strip.
+      // The listener is fire-and-forget, so an escaping rejection would surface as an unhandled
+      // worker error.
+    }
     return;
   }
 
