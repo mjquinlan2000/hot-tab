@@ -35,6 +35,10 @@ Paste `store/copy/single-purpose.txt` verbatim.
 
 Paste `store/copy/permission-contextmenus.txt` verbatim.
 
+### Permission justification — `tabGroups`
+
+Paste `store/copy/permission-tabgroups.txt` verbatim.
+
 ### Remote code
 
 Select **"No, I am not using remote code."** All code ships inside the package as ES modules compiled by
