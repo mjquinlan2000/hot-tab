@@ -17,7 +17,8 @@
     "package": "rm -rf web-ext-artifacts && node scripts/build.mjs && web-ext build --source-dir dist --overwrite-dest --filename \"hot-tab-{version}.zip\" --ignore-files \"js/*.map\"",
     "smoke": "node scripts/build.mjs && node scripts/smoke-tab-order.mjs",
     "store:assets": "node scripts/build.mjs && node scripts/store-assets.mjs",
-    "publish:cws": "node scripts/publish-cws.mjs"
+    "publish:cws": "node scripts/publish-cws.mjs",
+    "version": "node scripts/sync-manifest-version.mjs && git add public/manifest.json"
   },
   "devDependencies": {
     "@types/chrome": "^0.1.28",

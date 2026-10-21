@@ -84,11 +84,11 @@ Runs the build and packages the extension into `web-ext-artifacts/hot-tab-<versi
 
 ## Releasing
 
-Releases are tag-driven, and `public/manifest.json` is the source of truth for the version. CI never rewrites it.
+Releases are tag-driven. `npm version` keeps the version in `package.json`, `package-lock.json`, and `public/manifest.json` in step: its `version` lifecycle hook (`scripts/sync-manifest-version.mjs`) copies the new version into the manifest before npm commits and tags. CI never rewrites any of them.
 
-1. Bump `version` in `public/manifest.json` and `package.json` in a normal commit.
+1. Bump, commit, and tag in one step: `npm version patch` (or `minor`, `major`, or an explicit `x.y.z`). This needs a clean working tree and creates the `v<version>` tag locally.
 2. Refresh the store listing if the UI changed: `npm run store:assets`, then follow `store/listing.md` and save the dashboard draft **without submitting**.
-3. Push the matching tag (`git tag v3.0.0 && git push origin v3.0.0`).
+3. Push the commit and the tag together: `git push --follow-tags`.
 
 `.github/workflows/release.yml` then typechecks, smoke-tests, packages, authenticates to Google via GitHub OIDC
 and Workload Identity Federation (no long-lived secrets), uploads the zip to the Chrome Web Store, submits it

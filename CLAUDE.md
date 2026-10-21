@@ -17,6 +17,7 @@ Compiles TypeScript directly to native ES modules via `tsc` with zero runtime de
 | `npm run package` | `rm -rf web-ext-artifacts && node scripts/build.mjs && web-ext build --source-dir dist --overwrite-dest --filename "hot-tab-{version}.zip" --ignore-files "js/*.map"` | Builds and packages `web-ext-artifacts/hot-tab-<version>.zip` (explicit `--filename`; web-ext's default template would emit `hot_tab-<version>.zip`) |
 | `npm run store:assets` | `node scripts/build.mjs && node scripts/store-assets.mjs` | Renders the real popup into store-sized PNGs under `store/` and asserts each PNG's dimensions |
 | `npm run publish:cws` | `node scripts/publish-cws.mjs` | Uploads a zip to the Chrome Web Store and submits it for review; used by CI, never named `publish` (npm lifecycle hook) |
+| `npm version <patch\|minor\|major\|x.y.z>` | `version` hook: `node scripts/sync-manifest-version.mjs && git add public/manifest.json` | Bumps `package.json`, `package-lock.json`, and `public/manifest.json` in one commit and tags `v<version>`; push with `git push --follow-tags`. Never hand-tag: the release workflow fails when the tag disagrees with either version field |
 
 Use npm; never run `yarn install` (it creates a competing lockfile). Scripts avoid nested `npm run` calls to prevent `npm_config_*` warnings under yarn environments.
 
@@ -36,7 +37,8 @@ scripts/                    Tooling and verification scripts
 ├── build.mjs               Build runner: clears dist/, copies public/, runs tsc
 ├── smoke-tab-order.mjs     Zero-dependency Node assertion test for tab-order logic
 ├── store-assets.mjs        Renders store screenshots/promo tile from dist/popup.html
-└── publish-cws.mjs         Chrome Web Store v2 upload + publish (zero dependencies)
+├── publish-cws.mjs         Chrome Web Store v2 upload + publish (zero dependencies)
+└── sync-manifest-version.mjs  npm `version` hook: copies package.json version into the manifest
 store/                      Chrome Web Store listing sources (not shipped in dist/)
 ├── listing.md              Dashboard field map: category, privacy answers, asset table
 ├── copy/                   Plain-text paste payloads (CWS renders no Markdown or HTML)
