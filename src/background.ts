@@ -1,4 +1,4 @@
-import { planTabMove, TAB_GROUP_ID_NONE } from "./tab-order.js";
+import { planCloseOtherTabs, planTabMove, TAB_GROUP_ID_NONE } from "./tab-order.js";
 
 const MENU_ITEM_ID = "manage-shortcuts";
 const SHORTCUTS_SETTINGS_URL = "chrome://extensions/shortcuts";
@@ -68,21 +68,10 @@ const togglePinTab = async (): Promise<void> => {
 };
 
 const closeOtherTabs = async (): Promise<void> => {
-  const tabs = await chrome.tabs.query({
-    currentWindow: true,
-    pinned: false,
-    active: false,
-  });
-
-  const tabIds: number[] = [];
-  for (const tab of tabs) {
-    if (typeof tab.id === "number") {
-      tabIds.push(tab.id);
-    }
-  }
-
-  if (tabIds.length > 0) {
-    await chrome.tabs.remove(tabIds);
+  const tabs = await chrome.tabs.query({ currentWindow: true });
+  const ids = planCloseOtherTabs(tabs);
+  if (ids.length > 0) {
+    await chrome.tabs.remove(ids);
   }
 };
 

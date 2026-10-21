@@ -15,6 +15,8 @@ Default keyboard shortcuts for the four available actions:
 
 On macOS, the default bindings use literal Control (the manifest uses the `MacCtrl` token), not Command. Shortcuts can be customized at any time by navigating to `chrome://extensions/shortcuts`.
 
+Close other tabs is group aware: when the active tab is in a tab group, it closes the other tabs in that group; when the active tab is ungrouped, it closes the other ungrouped tabs. Pinned tabs are never closed.
+
 ## Requirements
 
 - Node.js (version pinned in `mise.toml`; install with `mise install`)
