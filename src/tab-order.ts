@@ -149,3 +149,41 @@ export const planTabMove = (input: {
 
   return { kind: "join", groupId: neighbor.groupId, index: activeIndex };
 };
+
+export interface CloseCandidate {
+  readonly id?: number | undefined;
+  readonly active: boolean;
+  readonly pinned: boolean;
+  readonly groupId: number;
+}
+
+/**
+ * Plans which tab IDs to close for the "close other tabs" command.
+ *
+ * Scopes closures to the active tab's group:
+ * - Active tab in a group: closes other unpinned tabs in that same group.
+ * - Active tab ungrouped (or pinned): closes other ungrouped, unpinned tabs.
+ *
+ * Pinned tabs and the active tab are never closed. Returns an empty array if
+ * there is no active tab or no matching tabs to close.
+ */
+export const planCloseOtherTabs = (tabs: readonly CloseCandidate[]): number[] => {
+  const activeTab = tabs.find((tab) => tab.active);
+  if (!activeTab) {
+    return [];
+  }
+
+  const ids: number[] = [];
+  for (const tab of tabs) {
+    if (
+      !tab.active &&
+      !tab.pinned &&
+      tab.groupId === activeTab.groupId &&
+      typeof tab.id === "number"
+    ) {
+      ids.push(tab.id);
+    }
+  }
+
+  return ids;
+};

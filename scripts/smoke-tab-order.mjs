@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
 const tabOrderUrl = new URL("../dist/js/tab-order.js", import.meta.url);
-const { nextTabIndex, planTabMove } = await import(tabOrderUrl.href);
+const { nextTabIndex, planCloseOtherTabs, planTabMove } = await import(tabOrderUrl.href);
 
 const runTestCase = (label, input, expected) => {
   const actual = nextTabIndex(input);
@@ -15,6 +15,16 @@ const runTestCase = (label, input, expected) => {
 
 const runPlanCase = (label, input, expected) => {
   const actual = planTabMove(input);
+  assert.deepStrictEqual(
+    actual,
+    expected,
+    `Expected ${label} to return ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`
+  );
+  console.log(`PASS: ${label}`);
+};
+
+const runCloseCase = (label, tabs, expected) => {
+  const actual = planCloseOtherTabs(tabs);
   assert.deepStrictEqual(
     actual,
     expected,
@@ -205,6 +215,76 @@ runPlanCase(
   "lone unpinned tab beside a pinned tab returns null",
   { tabs: [p, u], activeIndex: 1, offset: -1, collapsedGroupIds: [] },
   null
+);
+
+// 21. Active tab in a group closes only same-group siblings (not other groups, not ungrouped, not pinned)
+runCloseCase(
+  "active in group closes only same-group siblings",
+  [
+    { id: 1, active: false, pinned: true, groupId: -1 },
+    { id: 2, active: false, pinned: false, groupId: -1 },
+    { id: 3, active: true, pinned: false, groupId: 10 },
+    { id: 4, active: false, pinned: false, groupId: 10 },
+    { id: 5, active: false, pinned: true, groupId: 10 },
+    { id: 6, active: false, pinned: false, groupId: 20 },
+  ],
+  [4]
+);
+
+// 22. Active ungrouped tab closes only ungrouped unpinned others (not any grouped tab)
+runCloseCase(
+  "active ungrouped closes only ungrouped unpinned others",
+  [
+    { id: 1, active: false, pinned: true, groupId: -1 },
+    { id: 2, active: true, pinned: false, groupId: -1 },
+    { id: 3, active: false, pinned: false, groupId: -1 },
+    { id: 4, active: false, pinned: false, groupId: 10 },
+  ],
+  [3]
+);
+
+// 23. Active pinned tab closes ungrouped unpinned tabs only
+runCloseCase(
+  "active pinned closes ungrouped unpinned tabs only",
+  [
+    { id: 1, active: true, pinned: true, groupId: -1 },
+    { id: 2, active: false, pinned: true, groupId: -1 },
+    { id: 3, active: false, pinned: false, groupId: -1 },
+    { id: 4, active: false, pinned: false, groupId: 10 },
+  ],
+  [3]
+);
+
+// 24. Active sole member of its group returns empty array
+runCloseCase(
+  "active sole member of its group returns empty array",
+  [
+    { id: 1, active: false, pinned: false, groupId: -1 },
+    { id: 2, active: true, pinned: false, groupId: 10 },
+    { id: 3, active: false, pinned: false, groupId: 20 },
+  ],
+  []
+);
+
+// 25. No active tab returns empty array
+runCloseCase(
+  "no active tab returns empty array",
+  [
+    { id: 1, active: false, pinned: false, groupId: -1 },
+    { id: 2, active: false, pinned: false, groupId: 10 },
+  ],
+  []
+);
+
+// 26. Tab missing id is skipped
+runCloseCase(
+  "tab missing id is skipped",
+  [
+    { id: 1, active: true, pinned: false, groupId: 10 },
+    { active: false, pinned: false, groupId: 10 },
+    { id: 2, active: false, pinned: false, groupId: 10 },
+  ],
+  [2]
 );
 
 console.log("All tab-order smoke tests passed successfully.");
